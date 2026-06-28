@@ -1,4 +1,4 @@
-name: 🏗️ Taska OS — Build ISO
+name: "Taska OS - Build ISO"
 
 on:
   push:
@@ -13,113 +13,114 @@ jobs:
   build-iso:
     name: Compilar ISO de Taska OS
     runs-on: ubuntu-latest
+    container:
+      image: debian:bookworm
+      options: --privileged
 
     steps:
-      - name: 📥 Checkout del repositorio
+      - name: Checkout del repositorio
         uses: actions/checkout@v4
 
-      - name: 📦 Instalar live-build y herramientas
+      - name: Instalar dependencias de compilacion
         run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y \
+          apt-get update -qq
+          apt-get install -y \
             live-build debootstrap squashfs-tools \
             xorriso isolinux syslinux-efi \
             grub-pc-bin grub-efi-amd64-bin \
-            mtools curl wget gnupg ca-certificates
+            mtools curl wget gnupg ca-certificates git sudo
 
-      - name: 🔑 Importar clave GPG de Liquorix
+      - name: Importar clave GPG de Liquorix
         run: |
           mkdir -p taska-live-build/config/archives
           curl -s 'https://liquorix.net/liquorix-keyring.gpg' | \
             gpg --batch --yes --dearmor \
             -o taska-live-build/config/archives/liquorix.key.chroot
 
-      - name: ⚙️ Configurar live-build (Bookworm)
-        working-directory: taska-live-build
-        run: |
-          sudo lb config \
-            --binary-image iso-hybrid \
-            --distribution bookworm \
-            --archive-areas "main contrib non-free non-free-firmware" \
-            --bootappend-live \
-              "boot=live components locales=es_ES.UTF-8 keyboard-layouts=es timezone=UTC mitigations=off quiet splash" \
-            --apt-recommends false \
-            --debian-installer false \
-            --memtest none
-
-      - name: 📁 Preparar estructura de directorios
+      - name: Preparar estructura de directorios (ANTES de lb config)
         working-directory: taska-live-build
         run: |
           mkdir -p config/package-lists
+          mkdir -p config/archives
           mkdir -p config/includes.chroot/etc/sysctl.d
           mkdir -p config/includes.chroot/etc/default
           mkdir -p config/includes.chroot/etc/lightdm
+          mkdir -p config/includes.chroot/etc/profile.d
           mkdir -p config/includes.chroot/etc/skel/.config/openbox
           mkdir -p config/includes.chroot/etc/skel/.config/tint2
           mkdir -p config/includes.chroot/etc/skel/.config/rofi
           mkdir -p config/includes.chroot/etc/skel/.config/picom
-          mkdir -p config/includes.chroot/etc/skel/.config/conky
           mkdir -p config/includes.chroot/usr/share/backgrounds
           mkdir -p config/includes.chroot/usr/share/applications
           mkdir -p config/hooks/normal
+          chmod -R 777 config/
 
-      - name: 🏗️ Compilar Taska OS ISO
+      - name: Configurar live-build
         working-directory: taska-live-build
         run: |
-          sudo lb build 2>&1 | tee ../taska-build.log
+          lb config \
+            --binary-image iso-hybrid \
+            --distribution bookworm \
+            --archive-areas "main contrib non-free non-free-firmware" \
+            --bootappend-live "boot=live components locales=es_ES.UTF-8 keyboard-layouts=es timezone=UTC quiet splash" \
+            --apt-recommends false \
+            --debian-installer false \
+            --memtest none
 
-      - name: 🏷️ Renombrar ISO y calcular SHA256
-        id: rename
+      - name: Compilar Taska OS ISO
+        working-directory: taska-live-build
+        run: |
+          lb build 2>&1 | tee ../taska-build.log
+
+      - name: Preparar ISO para publicar
+        id: prep
         run: |
           DATE=$(date +%Y%m%d)
-          SHORT_SHA="${GITHUB_SHA::7}"
-          ISO_NAME="taska-os-${DATE}-${SHORT_SHA}-amd64.iso"
-          ISO_SRC=$(ls taska-live-build/*.iso 2>/dev/null | head -1)
-          if [ -z "$ISO_SRC" ]; then echo "ERROR: no se encontró ISO"; exit 1; fi
-          mv "$ISO_SRC" "$ISO_NAME"
-          sha256sum "$ISO_NAME" > "${ISO_NAME}.sha256"
-          echo "iso_name=$ISO_NAME" >> "$GITHUB_OUTPUT"
-          echo "iso_date=$DATE"     >> "$GITHUB_OUTPUT"
-          echo "iso_sha=$SHORT_SHA" >> "$GITHUB_OUTPUT"
+          SHA=$(echo $GITHUB_SHA | cut -c1-7)
+          NAME="taska-os-${DATE}-${SHA}-amd64.iso"
+          SRC=$(find taska-live-build -name "*.iso" | head -1)
+          if [ -z "$SRC" ]; then echo "ERROR: No se genero la ISO"; exit 1; fi
+          mv "$SRC" "$NAME"
+          sha256sum "$NAME" > "${NAME}.sha256"
+          echo "iso=$NAME"  >> $GITHUB_OUTPUT
+          echo "date=$DATE" >> $GITHUB_OUTPUT
+          ls -lh "$NAME"
 
-      - name: 📤 Subir ISO como artefacto
+      - name: Subir ISO como artefacto
         uses: actions/upload-artifact@v4
         with:
-          name: taska-os-iso-${{ steps.rename.outputs.iso_date }}
+          name: taska-os-${{ steps.prep.outputs.date }}
           path: |
-            ${{ steps.rename.outputs.iso_name }}
-            ${{ steps.rename.outputs.iso_name }}.sha256
+            ${{ steps.prep.outputs.iso }}
+            ${{ steps.prep.outputs.iso }}.sha256
           retention-days: 30
 
-      - name: 📋 Subir log de compilación
+      - name: Subir log de compilacion
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: taska-build-log
+          name: build-log-${{ steps.prep.outputs.date }}
           path: taska-build.log
           retention-days: 7
 
-      - name: 🚀 Publicar Release con la ISO
+      - name: Publicar Release con la ISO
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v1.0-${{ steps.rename.outputs.iso_date }}
-          name: "Taska OS v1.0 — Build ${{ steps.rename.outputs.iso_date }}"
+          tag_name: v1.0-${{ steps.prep.outputs.date }}
+          name: "Taska OS v1.0 - Build ${{ steps.prep.outputs.date }}"
           body: |
-            ## 🖥️ Taska OS v1.0
-            - **Base:** Debian 12 Bookworm
-            - **Kernel:** Liquorix amd64 (Zen-tuned)
-            - **Escritorio:** Openbox + Tint2 + Rofi + Picom
-            - **Ofimática:** LibreOffice Writer, Calc, Impress, Draw, Math, Base
-            - **Navegador:** Firefox ESR en español
-            - **Optimizaciones:** ZRAM zstd, tmpfs, swappiness=10
+            ## Taska OS v1.0
+            - Base: Debian 12 Bookworm
+            - Kernel: Liquorix amd64
+            - Escritorio: Openbox + Tint2 + Rofi
+            - Ofimatica: LibreOffice Suite completa
+            - Navegador: Firefox ESR
+            - Optimizaciones USB: ZRAM, tmpfs, swappiness=10
 
-            ### ⬇️ Flashear en USB con BalenaEtcher
-            1. Descarga el `.iso` de abajo
-            2. Abre [BalenaEtcher](https://etcher.balena.io)
-            3. Selecciona ISO → USB → Flash!
+            Instala con BalenaEtcher: https://etcher.balena.io
           files: |
-            ${{ steps.rename.outputs.iso_name }}
-            ${{ steps.rename.outputs.iso_name }}.sha256
+            ${{ steps.prep.outputs.iso }}
+            ${{ steps.prep.outputs.iso }}.sha256
           make_latest: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
