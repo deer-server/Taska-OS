@@ -1,0 +1,125 @@
+name: 🏗️ Taska OS — Build ISO
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-iso:
+    name: Compilar ISO de Taska OS
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout del repositorio
+        uses: actions/checkout@v4
+
+      - name: 📦 Instalar live-build y herramientas
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y \
+            live-build debootstrap squashfs-tools \
+            xorriso isolinux syslinux-efi \
+            grub-pc-bin grub-efi-amd64-bin \
+            mtools curl wget gnupg ca-certificates
+
+      - name: 🔑 Importar clave GPG de Liquorix
+        run: |
+          mkdir -p taska-live-build/config/archives
+          curl -s 'https://liquorix.net/liquorix-keyring.gpg' | \
+            gpg --batch --yes --dearmor \
+            -o taska-live-build/config/archives/liquorix.key.chroot
+
+      - name: ⚙️ Configurar live-build (Bookworm)
+        working-directory: taska-live-build
+        run: |
+          sudo lb config \
+            --binary-image iso-hybrid \
+            --distribution bookworm \
+            --archive-areas "main contrib non-free non-free-firmware" \
+            --bootappend-live \
+              "boot=live components locales=es_ES.UTF-8 keyboard-layouts=es timezone=UTC mitigations=off quiet splash" \
+            --apt-recommends false \
+            --debian-installer false \
+            --memtest none
+
+      - name: 📁 Preparar estructura de directorios
+        working-directory: taska-live-build
+        run: |
+          mkdir -p config/package-lists
+          mkdir -p config/includes.chroot/etc/sysctl.d
+          mkdir -p config/includes.chroot/etc/default
+          mkdir -p config/includes.chroot/etc/lightdm
+          mkdir -p config/includes.chroot/etc/skel/.config/openbox
+          mkdir -p config/includes.chroot/etc/skel/.config/tint2
+          mkdir -p config/includes.chroot/etc/skel/.config/rofi
+          mkdir -p config/includes.chroot/etc/skel/.config/picom
+          mkdir -p config/includes.chroot/etc/skel/.config/conky
+          mkdir -p config/includes.chroot/usr/share/backgrounds
+          mkdir -p config/includes.chroot/usr/share/applications
+          mkdir -p config/hooks/normal
+
+      - name: 🏗️ Compilar Taska OS ISO
+        working-directory: taska-live-build
+        run: |
+          sudo lb build 2>&1 | tee ../taska-build.log
+
+      - name: 🏷️ Renombrar ISO y calcular SHA256
+        id: rename
+        run: |
+          DATE=$(date +%Y%m%d)
+          SHORT_SHA="${GITHUB_SHA::7}"
+          ISO_NAME="taska-os-${DATE}-${SHORT_SHA}-amd64.iso"
+          ISO_SRC=$(ls taska-live-build/*.iso 2>/dev/null | head -1)
+          if [ -z "$ISO_SRC" ]; then echo "ERROR: no se encontró ISO"; exit 1; fi
+          mv "$ISO_SRC" "$ISO_NAME"
+          sha256sum "$ISO_NAME" > "${ISO_NAME}.sha256"
+          echo "iso_name=$ISO_NAME" >> "$GITHUB_OUTPUT"
+          echo "iso_date=$DATE"     >> "$GITHUB_OUTPUT"
+          echo "iso_sha=$SHORT_SHA" >> "$GITHUB_OUTPUT"
+
+      - name: 📤 Subir ISO como artefacto
+        uses: actions/upload-artifact@v4
+        with:
+          name: taska-os-iso-${{ steps.rename.outputs.iso_date }}
+          path: |
+            ${{ steps.rename.outputs.iso_name }}
+            ${{ steps.rename.outputs.iso_name }}.sha256
+          retention-days: 30
+
+      - name: 📋 Subir log de compilación
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: taska-build-log
+          path: taska-build.log
+          retention-days: 7
+
+      - name: 🚀 Publicar Release con la ISO
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0-${{ steps.rename.outputs.iso_date }}
+          name: "Taska OS v1.0 — Build ${{ steps.rename.outputs.iso_date }}"
+          body: |
+            ## 🖥️ Taska OS v1.0
+            - **Base:** Debian 12 Bookworm
+            - **Kernel:** Liquorix amd64 (Zen-tuned)
+            - **Escritorio:** Openbox + Tint2 + Rofi + Picom
+            - **Ofimática:** LibreOffice Writer, Calc, Impress, Draw, Math, Base
+            - **Navegador:** Firefox ESR en español
+            - **Optimizaciones:** ZRAM zstd, tmpfs, swappiness=10
+
+            ### ⬇️ Flashear en USB con BalenaEtcher
+            1. Descarga el `.iso` de abajo
+            2. Abre [BalenaEtcher](https://etcher.balena.io)
+            3. Selecciona ISO → USB → Flash!
+          files: |
+            ${{ steps.rename.outputs.iso_name }}
+            ${{ steps.rename.outputs.iso_name }}.sha256
+          make_latest: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
