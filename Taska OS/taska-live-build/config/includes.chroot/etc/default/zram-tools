@@ -1,0 +1,15 @@
+# Configuración de ZRAM para Taska OS (zram-tools)
+# Optimizado para aumentar la capacidad de la memoria RAM mediante compresión en tiempo real.
+
+# Habilitar compresión de ZRAM
+CORES=4
+
+# Asignar el 50% de la RAM total para el espacio de intercambio ZRAM comprimido
+# Si el equipo tiene 4GB, tendrá 2GB adicionales comprimidos en RAM
+SIZE=percent 50
+
+# Algoritmo de compresión ultra rápido (zstd o lz4)
+ALGORITHM=zstd
+
+# Prioridad alta para que se use antes que cualquier otro swap en disco
+PRIORITY=100

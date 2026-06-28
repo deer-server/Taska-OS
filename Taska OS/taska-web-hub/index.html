@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taska OS — Linux de Código Abierto Optimizado para USB</title>
+    <meta name="description" content="Taska OS es una distribución Linux basada en Debian, ultra-optimizada para correr desde USB, con Kernel Liquorix, Openbox y herramientas de ofimática preinstaladas.">
+    <!-- Favicon SVG inline -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect x='3' y='3' width='18' height='18' rx='5' fill='%230f111a' stroke='%2300f0ff' stroke-width='2'/><path d='M9 12L11 14L15 10' stroke='%23ff007f' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/></svg>">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- JSZip for ZIP generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar" id="mainNav">
+        <div class="nav-container">
+            <div class="logo">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="3" y="3" width="18" height="18" rx="5" stroke="#00f0ff" stroke-width="2"/>
+                    <path d="M9 12L11 14L15 10" stroke="#ff007f" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>TASKA<span class="logo-accent">OS</span></span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#inicio">Inicio</a></li>
+                <li><a href="#caracteristicas">Características</a></li>
+                <li><a href="#simulador">Simulador</a></li>
+                <li><a href="#personalizador">Personalizador</a></li>
+                <li><a href="#instalacion">Instalación</a></li>
+            </ul>
+            <a href="#personalizador" class="btn-primary nav-cta">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Descargar Taska
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="inicio" class="hero-section">
+        <div class="hero-bg-glow"></div>
+        <div class="hero-bg-glow hero-bg-glow-pink"></div>
+        <div class="container hero-container">
+            <div class="hero-content">
+                <div class="hero-badges">
+                    <span class="badge badge-cyan">CÓDIGO ABIERTO</span>
+                    <span class="badge badge-outline">Debian 12 Bookworm</span>
+                    <span class="badge badge-outline">Kernel Liquorix</span>
+                </div>
+                <h1>El sistema operativo que hace <span class="h1-gradient">volar tu USB</span></h1>
+                <p class="hero-desc">Taska OS es una distribución Linux ultra-ligera con Openbox, optimizada para arrancar directamente en RAM, con LibreOffice completo, Firefox ESR y cero desgaste en tu pendrive.</p>
+                <div class="hero-stats">
+                    <div class="stat-pill">
+                        <span class="stat-val">~180MB</span>
+                        <span class="stat-lbl">RAM en reposo</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-pill">
+                        <span class="stat-val">&lt;15s</span>
+                        <span class="stat-lbl">Tiempo de arranque</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-pill">
+                        <span class="stat-val">ZRAM</span>
+                        <span class="stat-lbl">Swap comprimida</span>
+                    </div>
+                </div>
+                <div class="hero-buttons">
+                    <a href="#personalizador" class="btn-primary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Descargar Paquete de Compilación
+                    </a>
+                    <a href="#simulador" class="btn-secondary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                        Probar Simulador Web
+                    </a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="os-preview-frame">
+                    <div class="os-preview-bar">
+                        <div class="os-preview-dots">
+                            <span class="dot dot-red"></span>
+                            <span class="dot dot-yellow"></span>
+                            <span class="dot dot-green"></span>
+                        </div>
+                        <span class="os-preview-title">Taska OS — Openbox Desktop</span>
+                    </div>
+                    <img src="assets/taska-wallpaper.png" alt="Vista previa del escritorio de Taska OS" class="os-preview-img">
+                    <div class="os-preview-dock">
+                        <span class="dock-item-mini">🦊</span>
+                        <span class="dock-item-mini">📝</span>
+                        <span class="dock-item-mini">📊</span>
+                        <span class="dock-item-mini">🎨</span>
+                        <span class="dock-item-mini">💻</span>
+                        <span class="dock-item-mini">📁</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Specs Banner -->
+    <div class="specs-banner">
+        <div class="container specs-container">
+            <div class="spec-banner-item">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00f0ff" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                <span>Kernel Liquorix de baja latencia</span>
+            </div>
+            <div class="spec-banner-item">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00f0ff" stroke-width="2"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.44l-3-9.5A2.5 2.5 0 0 1 6.5 6.5h3Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.44l3-9.5A2.5 2.5 0 0 0 17.5 6.5h-3Z"/></svg>
+                <span>LibreOffice Suite Completa (6 apps)</span>
+            </div>
+            <div class="spec-banner-item">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00f0ff" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                <span>Arranque en RAM (modo toram)</span>
+            </div>
+            <div class="spec-banner-item">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00f0ff" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                <span>Compatible UEFI y BIOS Legacy</span>
+            </div>
+            <div class="spec-banner-item">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00f0ff" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                <span>ZRAM: Swap comprimida en RAM</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <section id="caracteristicas" class="features-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">¿POR QUÉ TASKA OS?</span>
+                <h2>Diseñado para durar y volar desde tu USB</h2>
+                <p>Cada optimización ha sido pensada específicamente para la naturaleza de las memorias flash.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon icon-cyan">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    </div>
+                    <h3>Kernel Liquorix</h3>
+                    <p>Núcleo Zen-tuned de baja latencia. Las ventanas abren instantáneamente y la multitarea jamás se congela, incluso en puertos USB 2.0.</p>
+                    <div class="feature-tech">linux-image-liquorix-amd64</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon icon-pink">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                    </div>
+                    <h3>Compresión ZRAM</h3>
+                    <p>La swap se comprime en la RAM mediante el algoritmo zstd. Sin escrituras en la flash del USB, sin lag y con el doble de durabilidad.</p>
+                    <div class="feature-tech">zram-tools · algoritmo zstd</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon icon-purple">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/><line x1="15" y1="9" x2="15" y2="21"/></svg>
+                    </div>
+                    <h3>LibreOffice Completo</h3>
+                    <p>Writer, Calc, Impress, Draw, Math y Base preinstalados en español con total compatibilidad con formatos de Microsoft Office.</p>
+                    <div class="feature-tech">libreoffice-l10n-es · 6 aplicaciones</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon icon-cyan">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 17l10 5 10-5M2 12l10 5 10-5M2 7l10-5 10 5"/></svg>
+                    </div>
+                    <h3>Escritorio Openbox</h3>
+                    <p>Solo un gestor de ventanas, sin escritorio pesado. Picom, Tint2, Rofi y Conky conforman un entorno visualmente premium a 15MB de RAM.</p>
+                    <div class="feature-tech">openbox · tint2 · rofi · picom</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon icon-pink">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    </div>
+                    <h3>Cero Desgaste USB</h3>
+                    <p>/tmp, /var/log y /var/tmp en tmpfs (RAM). Opción noatime en fstab. El USB no se escribe mientras navegas o trabajas, solo cuando guardas tus archivos.</p>
+                    <div class="feature-tech">tmpfs · noatime · nodiratime</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon icon-purple">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M12 12v9"/><path d="m8 17 4 4 4-4"/></svg>
+                    </div>
+                    <h3>Paquete ZIP Completo</h3>
+                    <p>Descarga un paquete ZIP con todos los archivos de configuración listos. Solo extrae y ejecuta <code>sudo ./build.sh</code> en Linux o WSL.</p>
+                    <div class="feature-tech">debian live-build · ISO híbrida</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Simulator Section -->
+    <section id="simulador" class="simulator-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">SIMULADOR INTERACTIVO</span>
+                <h2>Prueba Taska OS ahora mismo</h2>
+                <p>Interactúa con la interfaz real: abre aplicaciones, usa el menú Rofi, arrastra ventanas y escribe comandos en la terminal.</p>
+            </div>
+
+            <div class="sim-help-bar">
+                <span class="sim-hint"><kbd>Clic derecho</kbd> Menú Openbox</span>
+                <span class="sim-hint"><kbd>Botón ⬛</kbd> Lanzador Rofi</span>
+                <span class="sim-hint">Arrastra ventanas por su barra de título</span>
+                <span class="sim-hint"><kbd>neofetch</kbd> en terminal para info del sistema</span>
+            </div>
+
+            <div class="sim-screen-container" id="simContainer">
+                <div class="sim-screen" id="simScreen">
+                    <div class="sim-desktop" id="simDesktop">
+
+                        <!-- Conky System Monitor -->
+                        <div class="sim-conky" id="simConky">
+                            <div class="conky-os-line">
+                                <span class="conky-os-name">TASKA OS</span>
+                                <span class="conky-os-ver">Debian 12 · Liquorix</span>
+                            </div>
+                            <div class="conky-divider"></div>
+                            <div class="conky-stat-row">
+                                <span class="conky-label">CPU</span>
+                                <span class="conky-pct" id="cCpu">8%</span>
+                                <div class="conky-bar-bg"><div class="conky-bar" id="bCpu" style="width:8%"></div></div>
+                            </div>
+                            <div class="conky-stat-row">
+                                <span class="conky-label">RAM</span>
+                                <span class="conky-pct" id="cRam">340 MB</span>
+                                <div class="conky-bar-bg"><div class="conky-bar" id="bRam" style="width:9%"></div></div>
+                            </div>
+                            <div class="conky-stat-row">
+                                <span class="conky-label">USB</span>
+                                <span class="conky-pct">1.1 GB / 7.5 GB</span>
+                                <div class="conky-bar-bg"><div class="conky-bar" style="width:15%; background:linear-gradient(90deg,#9c27b0,#ff007f)"></div></div>
+                            </div>
+                            <div class="conky-divider"></div>
+                            <div class="conky-uptime">Activo: <span id="simUptime">0:23</span> · Kernel Liquorix</div>
+                            <div class="conky-divider"></div>
+                            <div class="conky-shortcuts">
+                                <div class="conky-sc"><kbd>Super</kbd><span>Menú Rofi</span></div>
+                                <div class="conky-sc"><kbd>Super+T</kbd><span>Terminal</span></div>
+                                <div class="conky-sc"><kbd>Super+F</kbd><span>Firefox</span></div>
+                                <div class="conky-sc"><kbd>Super+L</kbd><span>Writer</span></div>
+                                <div class="conky-sc"><kbd>Super+E</kbd><span>Archivos</span></div>
+                                <div class="conky-sc"><kbd>Alt+F4</kbd><span>Cerrar</span></div>
+                            </div>
+                        </div>
+
+                        <!-- Openbox Right-Click Menu -->
+                        <div class="ob-menu" id="obMenu">
+                            <div class="ob-menu-header">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00f0ff" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="12" cy="12" r="3" fill="#00f0ff"/></svg>
+                                Taska OS — Escritorio
+                            </div>
+                            <div class="ob-menu-group">
+                                <div class="ob-menu-item" data-app="rofi">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                                    Lanzar Rofi (buscar apps)
+                                </div>
+                            </div>
+                            <div class="ob-menu-separator"></div>
+                            <div class="ob-menu-group">
+                                <div class="ob-menu-item" data-app="terminal">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+                                    Terminal (LXTerminal)
+                                </div>
+                                <div class="ob-menu-item" data-app="pcmanfm">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                                    Gestor de Archivos
+                                </div>
+                                <div class="ob-menu-item" data-app="firefox">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                                    Firefox ESR
+                                </div>
+                            </div>
+                            <div class="ob-menu-separator"></div>
+                            <div class="ob-menu-group">
+                                <div class="ob-menu-item" data-app="writer">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2196f3" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                                    LibreOffice Writer
+                                </div>
+                                <div class="ob-menu-item" data-app="calc">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4caf50" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/><line x1="15" y1="9" x2="15" y2="21"/></svg>
+                                    LibreOffice Calc
+                                </div>
+                                <div class="ob-menu-item" data-app="impress">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ff9800" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                                    LibreOffice Impress
+                                </div>
+                                <div class="ob-menu-item" data-app="draw">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#e91e63" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg>
+                                    LibreOffice Draw
+                                </div>
+                                <div class="ob-menu-item" data-app="evince">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f44336" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                                    Evince (PDF)
+                                </div>
+                            </div>
+                            <div class="ob-menu-separator"></div>
+                            <div class="ob-menu-group">
+                                <div class="ob-menu-item" data-app="gparted">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9c27b0" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2"/><line x1="12" y1="2" x2="12" y2="22"/></svg>
+                                    GParted (Particiones)
+                                </div>
+                                <div class="ob-menu-item" onclick="resetSimulator()">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.26"/></svg>
+                                    Reiniciar escritorio
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Rofi Launcher -->
+                        <div class="rofi-launcher" id="rofiLauncher">
+                            <div class="rofi-inputbar">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#00f0ff" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                                <input type="text" id="rofiSearch" class="rofi-entry" placeholder="Buscar aplicación..." autocomplete="off">
+                                <span class="rofi-esc">Esc</span>
+                            </div>
+                            <div class="rofi-listview" id="rofiList">
+                                <div class="rofi-element selected" data-app="firefox">
+                                    <div class="rofi-app-icon" style="background:#e84623">🦊</div>
+                                    <div class="rofi-app-info"><div class="rofi-app-name">Firefox ESR</div><div class="rofi-app-desc">Navegador web estable de código abierto</div></div>
+                                </div>
+                                <div class="rofi-element" data-app="writer">
+                                    <div class="rofi-app-icon" style="background:#2c5a9e">📝</div>
+                                    <div class="rofi-app-info"><div class="rofi-app-name">LibreOffice Writer</div><div class="rofi-app-desc">Procesador de textos compatible con .docx</div></div>
+                                </div>
+                                <div class="rofi-element" data-app="calc">
+                                    <div class="rofi-app-icon" style="background:#1a7540">📊</div>
+                                    <div class="rofi-app-info"><div class="rofi-app-name">LibreOffice Calc</div><div class="rofi-app-desc">Hojas de cálculo compatible con .xlsx</div></div>
+                                </div>
+                                <div class="rofi-element" data-app="impress">
+                                    <div class="rofi-app-icon" style="background:#c94a2b">🎞️</div>
+                                    <div class="rofi-app-info"><div class="rofi-app-name">LibreOffice Impress</div><div class="rofi-app-desc">Presentaciones compatibles con .pptx</div></div>
+                                </div>
+                                <div class="rofi-element" data-app="draw">
+                                    <div class="rofi-app-icon" style="background:#7b3fa0">🎨</div>
+                                    <div class="rofi-app-info"><div class="rofi-app-name">LibreOffice Draw</div><div class="rofi-app-desc">Ilustración vectorial y diagramas</div></div>
+                                </div>
+                                <div class="rofi-element" data-app="terminal">
+                                    <div class="rofi-app-icon" style="background:#1a1a1a">💻</div>
+                                    <div class="rofi-app-info"><div class="rofi-app-name">LXTerminal</div><div class="rofi-app-desc">Emulador de terminal ligero</div></div>
+                                </div>
+                                <div class="rofi-element" data-app="pcmanfm">
+                                    <div class="rofi-app-icon" style="background:#1565c0">📁</div>
+                                    <div class="rofi-app-info"><div class="rofi-app-name">PCManFM</div><div class="rofi-app-desc">Gestor de archivos ligero y rápido</div></div>
+                                </div>
+                                <div class="rofi-element" data-app="evince">
+                                    <div class="rofi-app-icon" style="background:#c62828">📖</div>
+                                    <div class="rofi-app-info"><div class="rofi-app-name">Evince</div><div class="rofi-app-desc">Lector de documentos PDF y DjVu</div></div>
+                                </div>
+                                <div class="rofi-element" data-app="gparted">
+                                    <div class="rofi-app-icon" style="background:#6a1b9a">💾</div>
+                                    <div class="rofi-app-info"><div class="rofi-app-name">GParted</div><div class="rofi-app-desc">Editor de particiones de disco</div></div>
+                                </div>
+                            </div>
+                            <div class="rofi-footer">
+                                <span><kbd>↑↓</kbd> Navegar</span>
+                                <span><kbd>Enter</kbd> Abrir</span>
+                                <span><kbd>Esc</kbd> Cerrar</span>
+                            </div>
+                        </div>
+
+                    </div><!-- end simDesktop -->
+
+                    <!-- Tint2 Taskbar -->
+                    <div class="sim-dock" id="simDock">
+                        <div class="dock-left">
+                            <button class="dock-menu-btn" id="dockMenuBtn" title="Lanzar Rofi (tecla Super)">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="4" stroke="#00f0ff" stroke-width="2"/><circle cx="12" cy="12" r="3.5" fill="#00f0ff"/></svg>
+                                <span class="dock-apps-label">Apps</span>
+                            </button>
+                        </div>
+                        <div class="dock-center" id="dockTasks"></div>
+                        <div class="dock-right">
+                            <div class="dock-systray">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8b92ad" stroke-width="2" title="Wi-Fi conectado"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20" stroke-width="3" stroke-linecap="round"/></svg>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8b92ad" stroke-width="2" title="Volumen 80%"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8b92ad" stroke-width="2" title="Batería 85%"><rect x="2" y="7" width="18" height="11" rx="2"/><line x1="22" y1="11" x2="22" y2="13"/><rect x="4" y="9" width="11" height="7" rx="1" fill="#27c93f" stroke="none"/></svg>
+                            </div>
+                            <div class="dock-time-block">
+                                <div class="dock-time" id="dockTime">00:00</div>
+                                <div class="dock-date" id="dockDate">Sáb, 28 Jun</div>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- end simScreen -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Customizer Section -->
+    <section id="personalizador" class="customizer-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">GENERADOR DE PAQUETE ISO</span>
+                <h2>Personaliza y descarga tu Taska OS</h2>
+                <p>Configura las opciones y descarga un paquete <code>.zip</code> completo con todos los archivos de configuración listos para compilar tu ISO.</p>
+            </div>
+            <div class="customizer-grid">
+                <div class="customizer-form-card">
+                    <div class="form-section-title">⚙️ Configuración del Sistema</div>
+                    <div class="form-group">
+                        <label>Entorno Gráfico</label>
+                        <select id="cfgDesktop" class="form-control">
+                            <option value="openbox" selected>Openbox (Recomendado — ~180 MB RAM)</option>
+                            <option value="xfce">XFCE 4 (Completo — ~300 MB RAM)</option>
+                            <option value="lxde">LXDE (Clásico ligero — ~220 MB RAM)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Suite de Ofimática</label>
+                        <select id="cfgOffice" class="form-control">
+                            <option value="full" selected>LibreOffice Suite Completa (Writer, Calc, Impress, Draw, Math, Base)</option>
+                            <option value="core">LibreOffice Core (Writer, Calc, Impress — ISO más pequeña)</option>
+                            <option value="light">AbiWord + Gnumeric (Ultra-ligero — PCs muy antiguas)</option>
+                            <option value="none">Sin ofimática (solo Firefox, edición manual)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Perfil de Optimización USB</label>
+                        <select id="cfgOpt" class="form-control">
+                            <option value="usb" selected>USB Máximo (ZRAM + swappiness + noatime + mitigations=off)</option>
+                            <option value="balanced">Balanceado (ZRAM + swappiness, con mitigaciones de seguridad)</option>
+                            <option value="ssd">SSD/HDD interno (sin optimizaciones de flash)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-section-title" style="margin-top: 24px;">📦 Aplicaciones Adicionales</div>
+                    <div class="checkbox-grid">
+                        <label class="checkbox-label"><input type="checkbox" id="chkFlameshot" checked><span>Flameshot (capturas)</span></label>
+                        <label class="checkbox-label"><input type="checkbox" id="chkGparted" checked><span>GParted (particiones)</span></label>
+                        <label class="checkbox-label"><input type="checkbox" id="chkConky" checked><span>Conky (monitor)</span></label>
+                        <label class="checkbox-label"><input type="checkbox" id="chkBluez" checked><span>Bluetooth (Blueman)</span></label>
+                        <label class="checkbox-label"><input type="checkbox" id="chkTlp" checked><span>TLP (ahorro batería)</span></label>
+                        <label class="checkbox-label"><input type="checkbox" id="chkVlc"><span>VLC (multimedia)</span></label>
+                        <label class="checkbox-label"><input type="checkbox" id="chkGimp"><span>GIMP (imagen/foto)</span></label>
+                        <label class="checkbox-label"><input type="checkbox" id="chkFlatpak"><span>Flatpak (apps aisladas)</span></label>
+                    </div>
+
+                    <div class="form-section-title" style="margin-top: 24px;">🔐 Sesión</div>
+                    <div class="toggle-row">
+                        <div class="toggle-info">
+                            <div class="toggle-title">Inicio de sesión automático</div>
+                            <div class="toggle-desc">Entra directo al escritorio sin contraseña. Ideal para USB.</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="chkAutologin" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="toggle-row" style="margin-top: 12px;">
+                        <div class="toggle-info">
+                            <div class="toggle-title">Opción toram en GRUB</div>
+                            <div class="toggle-desc">Añade entrada para cargar el sistema entero en RAM al arrancar.</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="chkToram" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <button type="button" class="btn-download" id="downloadBtn" onclick="downloadZipPackage()">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Descargar Paquete ZIP Completo
+                    </button>
+                    <p class="download-note">📦 Incluye build.sh + clean.sh + todas las configuraciones de Openbox, Tint2, Rofi, Picom, Conky, ZRAM y fstab optimizado — listo para usar con <code>sudo ./build.sh</code></p>
+                </div>
+
+                <div class="customizer-info-card">
+                    <div class="info-card-header">
+                        <h3>Resumen de tu Configuración</h3>
+                    </div>
+                    <div class="spec-list">
+                        <div class="spec-item"><span class="spec-lbl">SO Base</span><span class="spec-val">Debian 12 Bookworm</span></div>
+                        <div class="spec-item"><span class="spec-lbl">Kernel</span><span class="spec-val">Liquorix Zen-tuned</span></div>
+                        <div class="spec-item"><span class="spec-lbl">Arquitectura</span><span class="spec-val">x86_64 (amd64)</span></div>
+                        <div class="spec-item"><span class="spec-lbl">RAM en reposo</span><span class="spec-val" id="estRam">~180 MB</span></div>
+                        <div class="spec-item"><span class="spec-lbl">Tamaño ISO estimado</span><span class="spec-val" id="estSize">~1.2 GB</span></div>
+                        <div class="spec-item"><span class="spec-lbl">Arranque USB 3.0</span><span class="spec-val" id="estBoot">~15 segundos</span></div>
+                        <div class="spec-item"><span class="spec-lbl">Firmware Wi-Fi</span><span class="spec-val">Intel + Realtek + Atheros</span></div>
+                    </div>
+                    <div class="preview-code-wrapper">
+                        <div class="preview-code-header">
+                            <span>📄 Contenido del paquete ZIP</span>
+                        </div>
+                        <div class="preview-tree" id="zipTree">
+                            <pre class="tree-code" id="codePreview">Configura las opciones para ver
+el contenido del paquete...</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Installation Guide Section -->
+    <section id="instalacion" class="installation-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">GUÍA DE INSTALACIÓN</span>
+                <h2>De cero a tu USB de Taska OS en 4 pasos</h2>
+                <p>Sigue la guía interactiva para construir y flashear tu propio USB.</p>
+            </div>
+
+            <div class="steps-tabs" id="stepsTabs">
+                <button class="step-tab active" onclick="showStep(1)" id="stab1">
+                    <span class="step-num">1</span><span class="step-title">Descargar paquete</span>
+                </button>
+                <button class="step-tab" onclick="showStep(2)" id="stab2">
+                    <span class="step-num">2</span><span class="step-title">Compilar ISO</span>
+                </button>
+                <button class="step-tab" onclick="showStep(3)" id="stab3">
+                    <span class="step-num">3</span><span class="step-title">Flashear USB</span>
+                </button>
+                <button class="step-tab" onclick="showStep(4)" id="stab4">
+                    <span class="step-num">4</span><span class="step-title">Arrancar</span>
+                </button>
+            </div>
+
+            <div class="steps-content-container">
+                <div class="step-content active" id="step1">
+                    <div class="step-grid">
+                        <div class="step-text">
+                            <h3>Paso 1: Descargar el paquete de compilación</h3>
+                            <p>Ve a la sección <strong>Personalizador</strong> de arriba y selecciona tus opciones de escritorio, ofimática y optimizaciones. Luego haz clic en el botón de descarga.</p>
+                            <p>Recibirás un archivo <code>taska-build-package.zip</code> que contiene la estructura completa de Debian Live-Build con todas las configuraciones de Taska OS listas para usar.</p>
+                            <div class="info-box">
+                                <strong>📦 El paquete ZIP incluye:</strong>
+                                <ul>
+                                    <li>build.sh y clean.sh ejecutables</li>
+                                    <li>Configuraciones de Openbox, Tint2, Rofi, Picom, Conky</li>
+                                    <li>fstab, sysctl y zram-tools optimizados</li>
+                                    <li>Listado de paquetes con LibreOffice suite completa</li>
+                                    <li>Configuración de autologin con LightDM</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="step-visual">
+                            <div class="visual-card">
+                                <div class="visual-card-header">taska-build-package.zip</div>
+                                <div class="file-tree">
+                                    <div class="ftree-item ftree-dir">📁 taska-live-build/</div>
+                                    <div class="ftree-item ftree-file ftree-indent">📄 build.sh</div>
+                                    <div class="ftree-item ftree-file ftree-indent">📄 clean.sh</div>
+                                    <div class="ftree-item ftree-dir ftree-indent">📁 config/</div>
+                                    <div class="ftree-item ftree-dir ftree-indent2">📁 package-lists/</div>
+                                    <div class="ftree-item ftree-file ftree-indent3">📄 taska.list.chroot</div>
+                                    <div class="ftree-item ftree-dir ftree-indent2">📁 includes.chroot/</div>
+                                    <div class="ftree-item ftree-dir ftree-indent3">📁 etc/ → (fstab, sysctl, lightdm…)</div>
+                                    <div class="ftree-item ftree-dir ftree-indent3">📁 skel/ → (openbox, tint2, rofi…)</div>
+                                    <div class="ftree-item ftree-file ftree-indent">📄 README.md</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="step-content" id="step2">
+                    <div class="step-grid">
+                        <div class="step-text">
+                            <h3>Paso 2: Compilar la ISO en Linux</h3>
+                            <p>Extrae el paquete ZIP descargado. Abre una terminal en la carpeta <code>taska-live-build/</code> y ejecuta los siguientes comandos:</p>
+                            <pre class="code-block"><code><span class="cb-comment"># Dar permisos de ejecución</span>
+chmod +x build.sh clean.sh
+
+<span class="cb-comment"># Compilar la ISO de Taska OS</span>
+sudo ./build.sh</code></pre>
+                            <p>El proceso tarda entre <strong>20–60 minutos</strong> según tu conexión a internet y la velocidad del equipo. La ISO final aparecerá en la misma carpeta.</p>
+                            <div class="info-box info-box-warn">
+                                <strong>💡 Requisito:</strong> Necesitas un sistema Debian o Ubuntu para compilar (incluyendo <strong>WSL</strong> en Windows con Ubuntu instalado). El script instala automáticamente todas las herramientas necesarias.
+                            </div>
+                        </div>
+                        <div class="step-visual">
+                            <div class="terminal-mock">
+                                <div class="terminal-head">
+                                    <span class="term-dot dot-red"></span><span class="term-dot dot-yellow"></span><span class="term-dot dot-green"></span>
+                                    <span class="term-title">bash — sudo ./build.sh</span>
+                                </div>
+                                <div class="terminal-body">
+                                    <div class="term-line"><span class="tp">user@host:~$</span> <span class="tc">sudo ./build.sh</span></div>
+                                    <div class="term-out">[<span style="color:#00f0ff">*</span>] Verificando dependencias...</div>
+                                    <div class="term-out">[<span style="color:#27c93f">✓</span>] live-build instalado.</div>
+                                    <div class="term-out">[<span style="color:#00f0ff">*</span>] Configurando distribución Bookworm...</div>
+                                    <div class="term-out">[<span style="color:#00f0ff">*</span>] Descargando kernel Liquorix...</div>
+                                    <div class="term-out">[<span style="color:#00f0ff">*</span>] Instalando LibreOffice Suite...</div>
+                                    <div class="term-out">[<span style="color:#27c93f">✓</span>] ISO generada: live-image-amd64.hybrid.iso</div>
+                                    <div class="term-out">[<span style="color:#27c93f">✓</span>] ¡Compilación de Taska OS completada!</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="step-content" id="step3">
+                    <div class="step-grid">
+                        <div class="step-text">
+                            <h3>Paso 3: Flashear la ISO en tu USB</h3>
+                            <p>Usa <strong>Rufus</strong> (Windows) o <strong>BalenaEtcher</strong> (cualquier sistema) para grabar la ISO en tu pendrive USB.</p>
+                            <p><strong>⚠️ ¡Atención!</strong> Todos los datos del USB serán borrados. Usa un USB de mínimo <strong>4 GB</strong>.</p>
+                            <ol>
+                                <li>Abre Rufus o BalenaEtcher.</li>
+                                <li>Selecciona la ISO compilada (<code>live-image-amd64.hybrid.iso</code>).</li>
+                                <li>Selecciona tu dispositivo USB como destino.</li>
+                                <li>Haz clic en <strong>Flash! / Empezar</strong> y espera a que termine.</li>
+                            </ol>
+                        </div>
+                        <div class="step-visual">
+                            <div class="etcher-mock">
+                                <div class="etcher-title">balenaEtcher</div>
+                                <div class="etcher-flow">
+                                    <div class="etcher-step done"><div class="es-icon">💾</div><div class="es-label">taska-os.iso</div></div>
+                                    <div class="etcher-arr">→</div>
+                                    <div class="etcher-step done"><div class="es-icon">🔌</div><div class="es-label">USB 8 GB</div></div>
+                                    <div class="etcher-arr">→</div>
+                                    <div class="etcher-step pulse"><div class="es-icon">⚡</div><div class="es-label">Flasheando…</div></div>
+                                </div>
+                                <div class="etcher-progress">
+                                    <div class="etcher-bar"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="step-content" id="step4">
+                    <div class="step-grid">
+                        <div class="step-text">
+                            <h3>Paso 4: Arrancar Taska OS</h3>
+                            <p>Conecta tu USB, apaga el equipo y enciéndelo. Presiona repetidamente la tecla del <strong>Menú de Arranque</strong>:</p>
+                            <div class="bios-keys-grid">
+                                <div class="bios-key"><span class="bk-brand">HP</span><kbd>F9</kbd></div>
+                                <div class="bios-key"><span class="bk-brand">Dell</span><kbd>F12</kbd></div>
+                                <div class="bios-key"><span class="bk-brand">Lenovo</span><kbd>F12</kbd></div>
+                                <div class="bios-key"><span class="bk-brand">Asus</span><kbd>F8</kbd></div>
+                                <div class="bios-key"><span class="bk-brand">Acer</span><kbd>F12</kbd></div>
+                                <div class="bios-key"><span class="bk-brand">MSI</span><kbd>F11</kbd></div>
+                                <div class="bios-key"><span class="bk-brand">Gigabyte</span><kbd>F12</kbd></div>
+                                <div class="bios-key"><span class="bk-brand">Generic</span><kbd>Esc</kbd></div>
+                            </div>
+                            <p>Selecciona tu USB en la lista y presiona Enter. ¡Taska OS iniciará automáticamente en tu escritorio Openbox!</p>
+                        </div>
+                        <div class="step-visual">
+                            <div class="bios-mock">
+                                <div class="bios-title">Boot Device Selection</div>
+                                <div class="bios-opt">Kingston SSD 240GB (SATA)</div>
+                                <div class="bios-opt bios-selected">▶ USB: Taska OS Flash Drive 8GB</div>
+                                <div class="bios-opt">Windows Boot Manager</div>
+                                <div class="bios-opt">UEFI Network Boot</div>
+                                <div class="bios-opt">Enter Setup</div>
+                                <div class="bios-footer">↑↓ Seleccionar  Enter Iniciar  Esc Salir</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-container">
+            <div class="footer-brand">
+                <div class="logo" style="margin-bottom:10px">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="5" stroke="#00f0ff" stroke-width="2"/><path d="M9 12L11 14L15 10" stroke="#ff007f" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <span>TASKA<span class="logo-accent">OS</span></span>
+                </div>
+                <p>Un proyecto de código abierto de la comunidad Linux.<br>Basado en Debian GNU/Linux. Licencia MIT.</p>
+            </div>
+            <div class="footer-links">
+                <div class="footer-col">
+                    <div class="footer-col-title">Proyecto</div>
+                    <a href="#inicio">Inicio</a>
+                    <a href="#caracteristicas">Características</a>
+                    <a href="#simulador">Simulador</a>
+                    <a href="#personalizador">Personalizador</a>
+                </div>
+                <div class="footer-col">
+                    <div class="footer-col-title">Tecnologías</div>
+                    <span>Debian 12 Bookworm</span>
+                    <span>Kernel Liquorix</span>
+                    <span>Openbox + Tint2</span>
+                    <span>LibreOffice Suite</span>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <span>© 2026 Taska OS Project. Software libre bajo la Licencia MIT.</span>
+                <span class="footer-bottom-right">Hecho con ❤️ para la comunidad GNU/Linux</span>
+            </div>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>

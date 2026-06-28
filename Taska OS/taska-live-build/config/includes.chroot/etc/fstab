@@ -1,0 +1,10 @@
+# /etc/fstab: Static file system information.
+# Optimizado para Taska OS (USB Live)
+
+# El sistema de archivos raíz (overlay) es gestionado automáticamente por live-boot.
+
+# Montar directorios temporales y de logs en memoria RAM (tmpfs)
+# Esto reduce drásticamente las escrituras en el USB y prolonga su vida útil.
+tmpfs   /tmp        tmpfs   nosuid,nodev,noatime,mode=1777,size=25%  0   0
+tmpfs   /var/tmp    tmpfs   nosuid,nodev,noatime,mode=1777,size=10%  0   0
+tmpfs   /var/log    tmpfs   nosuid,nodev,noatime,mode=0755,size=10%  0   0

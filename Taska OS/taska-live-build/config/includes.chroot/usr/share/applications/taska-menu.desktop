@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Menú Taska
+Comment=Lanzador de aplicaciones flotante de Taska OS
+Exec=rofi -show drun -theme clean
+Icon=start-here
+Terminal=false
+Type=Application
+Categories=System;Utility;
+NoDisplay=true

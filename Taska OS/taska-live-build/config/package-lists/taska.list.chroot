@@ -1,0 +1,97 @@
+# ==========================================================
+# TASKA OS — LISTADO COMPLETO DE PAQUETES (v2)
+# Base: Debian 12 Bookworm
+# ==========================================================
+
+# ── Sistema Base y Servidor Gráfico ───────────────────────
+xorg
+xserver-xorg-core
+xserver-xorg-video-all
+xserver-xorg-input-all
+xinit
+lightdm
+lightdm-gtk-greeter
+
+# ── Kernel Liquorix (Alto Rendimiento para Escritorio) ────
+linux-image-liquorix-amd64
+linux-headers-liquorix-amd64
+
+# ── Entorno de Escritorio: Openbox + Utilidades ───────────
+openbox
+obconf
+tint2
+rofi
+picom
+pcmanfm
+lxappearance
+lxterminal
+nitrogen
+lxpolkit
+
+# ── Suite de Ofimática LibreOffice COMPLETA ───────────────
+libreoffice-writer          # Procesador de textos
+libreoffice-calc            # Hoja de cálculo
+libreoffice-impress         # Presentaciones
+libreoffice-draw            # Ilustración vectorial y diagramas
+libreoffice-math            # Editor de ecuaciones matemáticas
+libreoffice-base            # Gestor de bases de datos
+libreoffice-l10n-es         # Interfaz en español
+
+# ── Navegación Web ────────────────────────────────────────
+firefox-esr
+firefox-esr-l10n-es-es
+
+# ── Visualización de Documentos ──────────────────────────
+evince
+
+# ── Utilidades del Sistema ────────────────────────────────
+flameshot
+mousepad
+conky
+gparted
+xarchiver
+unzip
+zip
+htop
+ncdu
+file-roller
+xdg-user-dirs
+
+# ── Audio y Video (PipeWire — moderno y ligero) ───────────
+pipewire
+wireplumber
+pipewire-audio
+pipewire-pulse
+pavucontrol
+volumeicon-alsa
+
+# ── Conectividad y Redes ──────────────────────────────────
+network-manager
+network-manager-gnome
+bluez
+blueman
+
+# ── Optimización de Energía y RAM ─────────────────────────
+zram-tools
+tlp
+tlp-rdw
+
+# ── Iconos y Fuentes de Alta Calidad ─────────────────────
+papirus-icon-theme
+fonts-noto
+fonts-noto-mono
+fonts-noto-color-emoji
+
+# ── Controladores y Firmware (Compatibilidad de Hardware) ─
+firmware-linux
+firmware-linux-nonfree
+firmware-iwlwifi        # Intel Wi-Fi
+firmware-realtek        # Realtek Wi-Fi / Ethernet
+firmware-atheros        # Atheros Wi-Fi
+firmware-libertas       # Marvell Wi-Fi
+firmware-amd-graphics   # AMD/ATI GPU
+intel-microcode         # Microcódigo de CPU Intel
+amd64-microcode         # Microcódigo de CPU AMD
+
+# ── AppImage y Flatpak (Apps portables) ──────────────────
+flatpak

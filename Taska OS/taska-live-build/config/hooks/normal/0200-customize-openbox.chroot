@@ -1,0 +1,140 @@
+#!/bin/bash
+# ==========================================================
+# TASKA OS - HOOK DE PERSONALIZACIÓN DE OPENBOX (chroot)
+# ==========================================================
+set -e
+
+echo "[*] Iniciando Hook Chroot: Personalización de Openbox..."
+
+# 1. Asegurar directorios de configuración de usuario por defecto
+mkdir -p /etc/skel/.config/openbox
+
+# 2. Copiar archivo rc.xml de configuración por defecto de Openbox
+if [ -f /etc/xdg/openbox/rc.xml ]; then
+    cp /etc/xdg/openbox/rc.xml /etc/skel/.config/openbox/rc.xml
+    echo "[✓] Copiado rc.xml base de /etc/xdg/openbox/"
+else
+    echo "[!] Advertencia: /etc/xdg/openbox/rc.xml no encontrado. Creando estructura básica."
+    # Si por alguna razón no existe, creamos un esqueleto básico más adelante
+fi
+
+# 3. Utilizar Python3 para inyectar de forma segura nuestros atajos sin romper el XML
+python3 - << 'EOF'
+import os
+import xml.etree.ElementTree as ET
+
+xml_path = "/etc/skel/.config/openbox/rc.xml"
+
+if not os.path.exists(xml_path):
+    print("[!] No existe rc.xml para modificar.")
+    exit(0)
+
+try:
+    # Registrar namespace de Openbox para evitar prefijos como 'ns0' al guardar
+    ET.register_namespace('', 'http://openbox.org/3.4/rc')
+    
+    # Cargar XML
+    tree = ET.parse(xml_path)
+    root = tree.getroot()
+    
+    # Definir namespace para búsquedas
+    ns = {'ob': 'http://openbox.org/3.4/rc'}
+    
+    # 1. Buscar la etiqueta <keyboard>
+    keyboard = root.find('.//ob:keyboard', ns)
+    if keyboard is None:
+        # Reintento por si no tiene el namespace declarado en los nodos hijos
+        keyboard = root.find('.//keyboard')
+        
+    if keyboard is not None:
+        print("[*] Insertando atajos de teclado de Taska OS en rc.xml...")
+        
+        # Bloque de atajos personalizados
+        # Super (W) = Tecla Windows, A = Alt, C = Control, S = Shift
+        custom_keybinds_xml = """
+        <root>
+          <!-- Lanzar Rofi (Buscador de Apps) con Super/Windows o Super + Barra Espaciadora -->
+          <keybind key="Super_L">
+            <action name="Execute">
+              <command>rofi -show drun -theme clean</command>
+            </action>
+          </keybind>
+          <keybind key="W-space">
+            <action name="Execute">
+              <command>rofi -show drun -theme clean</command>
+            </action>
+          </keybind>
+
+          <!-- Terminal (lxterminal) con Super + T -->
+          <keybind key="W-t">
+            <action name="Execute">
+              <command>lxterminal</command>
+            </action>
+          </keybind>
+
+          <!-- Gestor de Archivos (pcmanfm) con Super + E -->
+          <keybind key="W-e">
+            <action name="Execute">
+              <command>pcmanfm</command>
+            </action>
+          </keybind>
+
+          <!-- Navegador Web (Firefox) con Super + F -->
+          <keybind key="W-f">
+            <action name="Execute">
+              <command>firefox-esr</command>
+            </action>
+          </keybind>
+
+          <!-- LibreOffice Writer con Super + L -->
+          <keybind key="W-l">
+            <action name="Execute">
+              <command>libreoffice --writer</command>
+            </action>
+          </keybind>
+
+          <!-- Captura de Pantalla (Flameshot) con Super + S -->
+          <keybind key="W-s">
+            <action name="Execute">
+              <command>flameshot gui</command>
+            </action>
+          </keybind>
+        </root>
+        """
+        
+        # Parsear atajos temporales
+        temp_tree = ET.fromstring(custom_keybinds_xml)
+        for keybind in temp_tree:
+            # Si el documento raíz usa namespaces, añadimos el namespace a las etiquetas hijas
+            if root.tag.startswith('{http://openbox.org'):
+                keybind.tag = '{http://openbox.org/3.4/rc}keybind'
+                for child in keybind:
+                    if child.tag == 'action':
+                        child.tag = '{http://openbox.org/3.4/rc}action'
+                        for subchild in child:
+                            if subchild.tag == 'command':
+                                subchild.tag = '{http://openbox.org/3.4/rc}command'
+            keyboard.append(keybind)
+            
+    # 2. Configurar tema por defecto 'Onyx' (Bordes oscuros)
+    theme_name = root.find('.//ob:theme/ob:name', ns)
+    if theme_name is None:
+        theme_name = root.find('.//theme/name')
+        
+    if theme_name is not None:
+        theme_name.text = "Onyx"
+        print("[*] Estableciendo tema Onyx en rc.xml...")
+
+    # Guardar cambios conservando el namespace
+    tree.write(xml_path, encoding='utf-8', xml_declaration=True)
+    print("[✓] XML guardado exitosamente.")
+    
+except Exception as e:
+    print(f"[!] Error al parsear y modificar rc.xml: {str(e)}")
+    # No fallamos la compilación por un error de parseo, pero lo reportamos
+EOF
+
+# 4. Asegurar permisos correctos para el script autostart y config
+chmod +x /etc/skel/.config/openbox/autostart || true
+
+echo "[✓] Finalizado Hook Chroot: Personalización de Openbox completa."
